@@ -1,0 +1,148 @@
+SETTING UP SELENIUM W/ PYTHON TO ACCESS SUNPOWER SITE
+
+3/4: got web scraping to work on Jupyter NB. Scraped Wikipedia field successfully.  
+
+Trouble shooting with Selenium, ran into problems involving Selenium version control, and importing with library ms.edge.selenium_tools 
+
+3/5: Fixed issue with WebDriver version.  **You have to get the right Webdriver to match the browser version that you are currently using.  Find Browser version on your computer settings.
+
+Second code block opens the SunPower Portal page, but nothing after that.
+
+Troubleshooting with getting username into the right field on the Sunpower login page.  The program is not finding the fields for username and password.
+
+Debugged success for the program to find and populate username and password (it worked when I used HTML (XPATH)) but not for the login button.
+
+Got the login button to click using the same XPATH with presence_of_element_located function
+
+WE ARE AUTOMATICALLY LOGGING INTO SUNPOWER'S WEBSITE
+
+3/6 looking into navigating to a particular customer's page after having logged in.
+
+Changed website to the Residential Project's Portal in the code.
+
+Successfully was able to input a customer's name into the "Search" input field and click on the name in the webpage, opening the customer's portal page
+
+Successfully was able to scrape the customer phone number and print it in the notebook.
+
+Had to add a feature that changes the dropdown menu value in the Residential Projects Portal to be "All Projects" before being populated with the name in the search input
+
+SETTING UP GOOGLESHEETS API USING PYTHON
+3/6
+Project Name: Scraping Project
+
+Enable Google Drive API using Google Cloud: 
+-create credentials for authentication
+
+-Get API key:
+AIzaSyCpjn0DAQdZZHkIGRcZGQmiQDEwIRNwq7o
+
+-Get Client ID: 
+994326256370-4ump7lr25fba24s0j9fbrnf1momgdaon.apps.googleusercontent.com
+
+-Service account email: owen-2@scraping-project-416421.iam.gserviceaccount.com
+
+-Project Number: 994326256370
+
+-Project ID: scraping-project-416421
+
+-Find JSON file in Tech Tools Folder
+
+-Move JSON file to a destination directory appropriate for the operating system, renaming it to service_account.json
+
+-Enable Google Sheets API in "APIs & Services" in project
+
+So I got a code  block that allows me to pull a cell value from a GoogleSheet and print it
+
+Jupyter NB: gspreadtest
+
+**Let's figure out how to get those scraped values from Sunpower site onto an excel sheet
+
+3/7
+Figuring out an easier, faster way to scrape:
+
+Was not able to use Selenium and then Beautiful Soup to scrape data from the page, 
+
+I was able to use Selenium to get past user name and password protection, and then use requests to find the website and Selenium to scrape.
+
+Connecting Portal information scraped to populate cell in Google Sheet
+
+3/8
+Having trouble accessing the json file with the Google API information
+
+I got access to the json file for the API, by creating a new json file with a new key.  Now having an issue with correct formatting of the element.text to be put into cell A3 in the spreadsheet.
+
+I was able to successfully update the latest comment date in a specific (inputted name) and put it on the Pipeline
+
+Successfully scraped a date value from the Portal onto the Google Sheet**
+
+Successfully  populated the "Latest Interaction Time/Date (J column) cell with the most recent date in the chatter for input customer's chatter section.  
+
+*Debug task: Active Projects/All Projects issue (some customer names are in Active Projects File, and others are only in All Projects, so it would maybe be necessary to open one and then the other if the name is not in the first one.
+
+Future Task: Will also be looking into how to use Google Script App to run this Python code at intervals.
+
+3/11
+
+I'm going to add another task that will pull the website from column B and use it to get to customer Portal page, rather than using Selenium to enter all the customer information into the Residential Portal search page.  This speeds up the scraping process by simplifying the iteration process
+
+Tweaked code so that it doesn't show "edited" or get stuck when it finds this value in the timestamp.  Tweaked the date style 
+
+Program can successfully scrape all last interaction values and past them into all of the "Last Client Interaction" column
+
+3/12
+Modify code to print in the desired columns of the user sheet
+
+Successfully scraped the last comment made and populated L column with it.  
+
+Trying to get it to automatically run with Windows Task Schedulers.  Have to turn the notebook into a locally stored file.  /Have to change the code file from .py to python.exe .  Have to use pyinstaller in command prompt to do this.
+
+I changed the .py into a .exe file, but I need a password to run it with a username
+
+3/13
+Always save a version of the sheet before running any tests in the user environment 
+
+The email associated with the GoogleSheet API key has to have shared access to the GoogleSheet in order for the new code to run.
+
+Latest comments and Last Interaction Dates are populating in the K & J columns respectively in the pipeline.
+This program is called 
+
+3/14
+The Number of Projects and the Tasks Completed Values are populating into the spreadsheet now.  I had to use css selector path type value to find the "Completed" values in the table, the Xpath couldn't find it.
+
+This program is in a separate file from the latest comment and latest update program (UpdateCompletedTasksAndNumberOfTasks)
+
+3/15
+
+Homeowner email, Utility, EC name, kWp, Deal Type and City have been scraped from Portal into Pipeline. (Update2HOEmailCityUtility)
+
+3/16
+
+Got Permit Application Status column to scrape and populate, as well as the PC email field as well. 
+
+To automate via google app script, I'm going to set up a server through Apache HTTP server.
+
+3/19
+
+Status scraped from the portal has been added to column Z.  The fill of the Customer Status cells changed based on the status of the project.  Namely, Green fill for Active, Yellow fill for On Hold, Orange fill for At Risk, Red fill for Pending Cancellation,, and Purple fill for Cancelled
+
+3/20
+
+Google Apps Script was created to add a dialog box with Customer name input and customer page URL that, when the submit button is clicked, it will be added to the spreadsheet in its alphabetical order, along with the URL in the respective Y column.
+
+Next idea is to copy the formulas from the cell above it and add them to the blank cells in the new customer row.
+
+I have gotten the Flask App to work on the command prompt, and when I enter into the URL 127.0.0.1:5000/TaskUpdate, it opens to the row 5 customer page, but stops and shows a AttributeError, so it won't scrape anything yet (from the project tasks page)
+
+3/21
+
+Got the Flask app to run properly for the UpdateComment Flask app.  It runs fine when executed from the command prompt.  Having trouble running it from the Google App Script.  This is the error: Bad Request.
+
+I will try enabling CORS (Cross-Origin Resource Sharing).  It seems as though Google App Script is not able to access the local server.  This CORS could allow a change in the local server configuration to allow Google App Script to successfully connect to it.
+
+I was able to write a google script app to run the http python script by opening another tab in the window and running it there using openWebApp.  It auto-updates the comments not.  I set it to a scheduled trigger for 8:40 am and 1:00 pm day using another function in the google app script runAtSpecificTime, and setting the triggers to time-based 8-9 am and 1-2 pm.
+
+We have our first automated web scraping feature in the Google Sheet.
+
+3/22
+
+I added formulas to the customer add dropdown, so the only thing left is the scraped values to be added when a new customer is added to the spreadsheet.
