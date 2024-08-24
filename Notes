@@ -34,14 +34,12 @@ Enable Google Drive API using Google Cloud:
 -create credentials for authentication
 
 -Get API key:
-AIzaSyCpjn0DAQdZZHkIGRcZGQmiQDEwIRNwq7o
 
 -Get Client ID: 
-994326256370-4ump7lr25fba24s0j9fbrnf1momgdaon.apps.googleusercontent.com
 
--Service account email: owen-2@scraping-project-416421.iam.gserviceaccount.com
+-Service account email: 
 
--Project Number: 994326256370
+-Project Number: 
 
 -Project ID: scraping-project-416421
 
